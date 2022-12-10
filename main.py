@@ -30,7 +30,7 @@ def show_pmf():
     plt.close('all')
     names = list(original_dic.keys())
     values = list(original_dic.values())
-    print (range(len(original_dic)))
+    #print (range(len(original_dic)))
     plt.bar(range(len(original_dic)), values, tick_label=names)
     plt.title("PMF")
     plt.show()
@@ -173,6 +173,10 @@ kurt_text.place(x=250, y=190)
 letter_text.place(x= 110, y = 250)
 Occ_text.place(x= 250, y = 250)
 
-
-
 win.mainloop()
+
+
+
+############################################################
+########   Made by / Omar Ayyad    #########################
+############################################################
