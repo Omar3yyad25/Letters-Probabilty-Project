@@ -5,7 +5,6 @@ import numpy as np
 import math
 import operator
 
-x= ""
 win=Tk()
 win.geometry("500x300")
 original_dic = {'0': 0,'1': 0,'2': 0,'2': 0,'3': 0,'4': 0,'5': 0,'6': 0,'7': 0,'8': 0 ,'9': 0 ,'a': 0,'A': 0,'b': 0,'B': 0,'c': 0,'C': 0,'d': 0,'D': 0,'e': 0,'E': 0 ,'f': 0,'F': 0,'g': 0,'G': 0,'h': 0,'H': 0,'i': 0,'I': 0,'j': 0,'J': 0,'k': 0 ,'K': 0 ,'l': 0,'L': 0,'m': 0,'M': 0,'n': 0,'N': 0,'o': 0,'O': 0,'p': 0,'P': 0 ,'q': 0,'Q': 0,'r': 0,'R': 0,'s': 0,'S': 0,'t': 0,'T': 0,'u': 0,'U': 0,'v': 0 ,'V': 0,'w': 0,'W': 0,'x': 0,'X': 0,'y': 0,'Y': 0,'z': 0,'Z': 0}
@@ -18,6 +17,27 @@ probabilty_mean4 = []
 
 def clear():
    my_text_box.delete("1.0","end")
+   mean.set(0)
+   var.set(0)
+   ske.set(0)
+   kurt.set(0)
+   most_letter.set(0)
+   most_letterOc.set(0)
+
+   global probabilty_mean , probabilty_mean2, probabilty_mean3, probabilty_mean4
+   probabilty_mean= []
+   probabilty_mean2 =[]
+   probabilty_mean3 =[]
+   probabilty_mean4 = []
+
+   global prob_dic , original_dic
+
+   for i in prob_dic:
+       prob_dic[i]=0
+   for j in original_dic:
+       original_dic[j] = 0
+
+
 
 def word_freq(string):
     text = ''.join(e for e in string if e.isalnum())
@@ -47,12 +67,11 @@ def show_cdf():
 
 
 def analysis():
-
-
    value=my_text_box.get("1.0","end-1c")
+   print (value)
    file = open (value+'.txt', 'r')
    fileContent=file.read()
-
+   print (fileContent)
    letters =word_freq(fileContent)
    #print (letters)
    sumLetters = sum(letters.values())
@@ -63,7 +82,7 @@ def analysis():
    sumLetters = sum(original_dic.values())
    for n in original_dic:
        prob_dic[n] = original_dic[n]/sumLetters
-
+   #print(calc_mean())
    mean.set(calc_mean())
    var.set(calc_var())
    most_letter.set(max(original_dic.items(), key=operator.itemgetter(1))[0])
@@ -71,26 +90,27 @@ def analysis():
    ske.set(calc_skewness())
    kurt.set(calc_kurt())
 
-
 def calc_mean():
     counter =  0
     for i in prob_dic:
        x= counter * prob_dic[i]
        counter = counter+1
        probabilty_mean.append(x)
-    mean = sum(probabilty_mean)
-    return mean
+    mean_1 = sum(probabilty_mean)
+    return mean_1
 
 def calc_var():
+    var_1 =0
     counter = 0
     for j in prob_dic:
        y= pow(counter,2)*prob_dic[j]
        probabilty_mean2.append(y)
        counter = counter +1
-    var = sum(probabilty_mean2) - pow(sum(probabilty_mean),2)
-    return var
+    var_1 = sum(probabilty_mean2) - pow(sum(probabilty_mean),2)
+    return var_1
 
 def calc_skewness():
+    ske_1=0
     counter = 0
     for j in prob_dic:
        y= pow(counter,3)*prob_dic[j]
@@ -99,12 +119,13 @@ def calc_skewness():
 
     dom = pow(math.sqrt(sum(probabilty_mean2) - pow(sum(probabilty_mean),2)),3)
     if (dom != 0):
-        ske = (sum(probabilty_mean3) - 3*sum(probabilty_mean)*(sum(probabilty_mean2) - pow(sum(probabilty_mean),2))-pow(sum(probabilty_mean),3))/pow(math.sqrt(sum(probabilty_mean2) - pow(sum(probabilty_mean),2)),3)
-        return ske
+        ske_1 = (sum(probabilty_mean3) - 3*sum(probabilty_mean)*(sum(probabilty_mean2) - pow(sum(probabilty_mean),2))-pow(sum(probabilty_mean),3))/pow(math.sqrt(sum(probabilty_mean2) - pow(sum(probabilty_mean),2)),3)
+        return ske_1
     else:
         return ("None")
 
 def calc_kurt():
+    kurt_1 = 0
     counter = 0
     for j in prob_dic:
        y= pow(counter,4)*prob_dic[j]
@@ -113,8 +134,8 @@ def calc_kurt():
 
     dom = pow(math.sqrt(sum(probabilty_mean2) - pow(sum(probabilty_mean),2)),4)
     if (dom != 0):
-        kurt = (sum(probabilty_mean3) - 3*sum(probabilty_mean)*(sum(probabilty_mean2) - pow(sum(probabilty_mean),2))-pow(sum(probabilty_mean),3))/pow(math.sqrt(sum(probabilty_mean2) - pow(sum(probabilty_mean),2)),3)
-        return kurt
+        kurt_1 = (sum(probabilty_mean4)-4*(sum(probabilty_mean))*(sum(probabilty_mean3))+6*(pow(sum(probabilty_mean),2))*((sum(probabilty_mean2) - pow(sum(probabilty_mean),2)))+3*(pow(sum(probabilty_mean),4)))/pow(math.sqrt(sum(probabilty_mean2) - pow(sum(probabilty_mean),2)),4)
+        return kurt_1
     else:
         return ("None")
 
