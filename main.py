@@ -49,9 +49,8 @@ def word_freq(string):
 def show_pmf():
     plt.close('all')
     names = list(original_dic.keys())
-    values = list(original_dic.values())
-    #print (range(len(original_dic)))
-    plt.bar(range(len(original_dic)), values, tick_label=names)
+    values = list(prob_dic.values())
+    plt.bar(range(len(prob_dic)), values, tick_label=names)
     plt.title("PMF")
     plt.show()
 
@@ -60,8 +59,7 @@ def show_cdf():
     names = list(prob_dic.keys())
     y=list(prob_dic.values())
     cdf=np.cumsum(y)
-    print (cdf)
-    plt.bar(range(len(prob_dic)),cdf,tick_label=names)
+    plt.bar(range(len(original_dic)),cdf,tick_label=names)
     plt.title("CDF")
     plt.show()
 
@@ -69,7 +67,7 @@ def show_cdf():
 def analysis():
    value=my_text_box.get("1.0","end-1c")
    print (value)
-   file = open (value+'.txt', 'r')
+   file = open (value, 'r')
    fileContent=file.read()
    print (fileContent)
    letters =word_freq(fileContent)
@@ -140,7 +138,7 @@ def calc_kurt():
         return ("None")
 
 
-filename_box = Label(win, text= "Filename: ")
+filename_box = Label(win, text= "File path: ")
 filename_box.place(x= 105,y=0)
 my_text_box=Text(win, height=1, width=20)
 my_text_box.pack()
