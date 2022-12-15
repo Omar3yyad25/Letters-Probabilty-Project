@@ -7,12 +7,15 @@ import operator
 
 win=Tk()
 win.geometry("500x300")
+win.title ("CIE 327 FALL 2022")
 original_dic = {'0': 0,'1': 0,'2': 0,'2': 0,'3': 0,'4': 0,'5': 0,'6': 0,'7': 0,'8': 0 ,'9': 0 ,'a': 0,'A': 0,'b': 0,'B': 0,'c': 0,'C': 0,'d': 0,'D': 0,'e': 0,'E': 0 ,'f': 0,'F': 0,'g': 0,'G': 0,'h': 0,'H': 0,'i': 0,'I': 0,'j': 0,'J': 0,'k': 0 ,'K': 0 ,'l': 0,'L': 0,'m': 0,'M': 0,'n': 0,'N': 0,'o': 0,'O': 0,'p': 0,'P': 0 ,'q': 0,'Q': 0,'r': 0,'R': 0,'s': 0,'S': 0,'t': 0,'T': 0,'u': 0,'U': 0,'v': 0 ,'V': 0,'w': 0,'W': 0,'x': 0,'X': 0,'y': 0,'Y': 0,'z': 0,'Z': 0}
 prob_dic = {'0': 0,'1': 0,'2': 0,'2': 0,'3': 0,'4': 0,'5': 0,'6': 0,'7': 0,'8': 0 ,'9': 0 ,'a': 0,'A': 0,'b': 0,'B': 0,'c': 0,'C': 0,'d': 0,'D': 0,'e': 0,'E': 0 ,'f': 0,'F': 0,'g': 0,'G': 0,'h': 0,'H': 0,'i': 0,'I': 0,'j': 0,'J': 0,'k': 0 ,'K': 0 ,'l': 0,'L': 0,'m': 0,'M': 0,'n': 0,'N': 0,'o': 0,'O': 0,'p': 0,'P': 0 ,'q': 0,'Q': 0,'r': 0,'R': 0,'s': 0,'S': 0,'t': 0,'T': 0,'u': 0,'U': 0,'v': 0 ,'V': 0,'w': 0,'W': 0,'x': 0,'X': 0,'y': 0,'Y': 0,'z': 0,'Z': 0}
 probabilty_mean = []
 probabilty_mean2 = []
 probabilty_mean3 = []
 probabilty_mean4 = []
+most_repeat_letter= []
+
 
 
 def clear():
@@ -24,11 +27,12 @@ def clear():
    most_letter.set(0)
    most_letterOc.set(0)
 
-   global probabilty_mean , probabilty_mean2, probabilty_mean3, probabilty_mean4
+   global probabilty_mean , probabilty_mean2, probabilty_mean3, probabilty_mean4, most_repeat_letter
    probabilty_mean= []
    probabilty_mean2 =[]
    probabilty_mean3 =[]
    probabilty_mean4 = []
+   most_repeat_letter= []
 
    global prob_dic , original_dic
 
@@ -66,12 +70,10 @@ def show_cdf():
 
 def analysis():
    value=my_text_box.get("1.0","end-1c")
-   print (value)
    file = open (value, 'r')
    fileContent=file.read()
    print (fileContent)
    letters =word_freq(fileContent)
-   #print (letters)
    sumLetters = sum(letters.values())
 
    for l in letters:
@@ -80,13 +82,21 @@ def analysis():
    sumLetters = sum(original_dic.values())
    for n in original_dic:
        prob_dic[n] = original_dic[n]/sumLetters
-   #print(calc_mean())
    mean.set(calc_mean())
    var.set(calc_var())
-   most_letter.set(max(original_dic.items(), key=operator.itemgetter(1))[0])
-   most_letterOc.set(max(original_dic.items(), key=operator.itemgetter(1))[1])
    ske.set(calc_skewness())
    kurt.set(calc_kurt())
+   no_of_letters = int(set_letters())
+   sorted_value = sorted(original_dic.items(), key = lambda x:x[1], reverse=True)
+   for i in range (0,no_of_letters):
+       key = list(sorted_value)[i]
+       most_repeat_letter.append(key)
+   print(most_repeat_letter)
+   most_letter.set(most_repeat_letter)
+
+def set_letters():
+    value = most_no.get("1.0","end-1c" )
+    return value
 
 def calc_mean():
     counter =  0
@@ -141,7 +151,9 @@ def calc_kurt():
 filename_box = Label(win, text= "File path: ")
 filename_box.place(x= 105,y=0)
 my_text_box=Text(win, height=1, width=20)
-my_text_box.pack()
+my_text_box.place(x = 180 , y= 0)
+most_no = Text(win, height = 1 , width = 17)
+most_no.place (x = 200, y= 100)
 
 
 
@@ -157,7 +169,6 @@ clear.place(x=250, y =30)
 pmf_button.place(x=160, y =60)
 cdf_button.place(x=250, y =60)
 
-
 mean_box = Label(win, text= "Mean: ")
 mean_box.place(x=110, y=120)
 var_box = Label(win, text= "Variance: ")
@@ -166,12 +177,11 @@ ske_box = Label(win, text= "Skewness: ")
 ske_box.place(x=110, y=170)
 kurt_box = Label(win, text= "Kurtosis: ")
 kurt_box.place(x=250, y=170)
+letter_no = Label(win, text= "Number of letters: ")
+letter_no.place(x=80, y=100)
 
 most_letter_box = Label(win, text= "Most repeated: ")
-most_letter_box.place(x=110, y=230)
-most_letterOc_box = Label(win, text= "Occurance: ")
-most_letterOc_box.place(x=250, y=230)
-
+most_letter_box.place(x=170, y=230)
 
 mean=StringVar()
 var=StringVar()
@@ -184,18 +194,18 @@ var_text =Entry(win, textvariable=var)
 ske_text =Entry(win, textvariable=ske)
 kurt_text =Entry(win, textvariable=kurt)
 letter_text =Entry(win, textvariable=most_letter)
-Occ_text =Entry(win, textvariable=most_letterOc)
+
 mean_text.place(x=110, y=150)
 var_text.place(x=250, y=150)
 ske_text.place(x=110, y=190)
 kurt_text.place(x=250, y=190)
-letter_text.place(x= 110, y = 250)
-Occ_text.place(x= 250, y = 250)
+letter_text.place(x= 170, y = 250)
+
 
 win.mainloop()
 
 
 
 ############################################################
-########   Made by / Omar Ayyad    #########################
+###############   Made by / Omar Ayyad    ##################
 ############################################################
